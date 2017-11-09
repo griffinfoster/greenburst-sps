@@ -42,7 +42,7 @@ FOREACH(component ${CHEETAH_FIND_COMPONENTS})
             SET(CHEETAH_MOD_DIR ${CHEETAH_MODULES_DIR})
             UNSET(CHEETAH_MODULES_DIR)
         ENDIF (CHEETAH_MODULES_DIR)
-        FIND_PATH(CHEETAH_MODULES_DIR cheetah/cmake/git_version.cmake
+        FIND_PATH(CHEETAH_MODULES_DIR cheetah/cmake/FindPanda.cmake
                 "${CHEETAH_MOD_DIR}"
                 "${CHEETAH_SOURCE_DIR}"
                 "${CHEETAH_INSTALL_DIR}/share"
