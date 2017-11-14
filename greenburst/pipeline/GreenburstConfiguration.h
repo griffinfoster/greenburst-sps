@@ -26,7 +26,8 @@
 
 
 #include "greenburst/utils/ConfigModule.h"
-#include "cheetah/sigproc/Config.h"
+#include "greenburst/source/Config.h"
+#include "cheetah/pipeline/CheetahConfig.h"
 
 namespace greenburst {
 namespace pipeline {
@@ -36,34 +37,26 @@ namespace pipeline {
  * @details
  */
 
-class GreenburstConfiguration : public utils::ConfigModule::ConfigType
+class GreenburstConfiguration : public ska::cheetah::pipeline::CheetahConfig //: public utils::ConfigModule::ConfigType
 {
-        typedef utils::ConfigModule::ConfigType BaseT;
+        //typedef utils::ConfigModule::ConfigType BaseT;
+        typedef ska::cheetah::pipeline::CheetahConfig BaseT;
 
     public:
         GreenburstConfiguration();
-
         ~GreenburstConfiguration();
 
-        /**
-         * @brief return the selected input stream name
-         */
-        std::string const& stream_name() const;
-
-        /**
-         * @brief return the selected processing pipeline name
-         */
-        std::string const& pipeline_name() const;
-
-        ska::cheetah::sigproc::Config const& sigproc_stream_config() const;
+        std::string const& source_name() const;
+        source::Config const& source_config() const;
+        ska::cheetah::exporters::DataExportConfig const& sink_config() const;
+        ska::cheetah::pipeline::CheetahConfig const& cheetah_config() const;
 
     protected:
-
-        void add_options(OptionsDescriptionEasyInit& add_options);
+        void add_options(OptionsDescriptionEasyInit& add_options) override;
 
     private:
-
-        ska::cheetah::sigproc::Config _sigproc_stream_config;
+        source::Config _sources_config;
+        ska::cheetah::pipeline::CheetahConfig _cheetah_config;
 };
 
 

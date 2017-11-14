@@ -65,6 +65,16 @@ unsigned Config::spectrums_per_chunk() const
     return _parent.spectrums_per_chunk();
 }
 
+boost::asio::ip::udp::endpoint Config::remote_end_point() const
+{
+    return _endpoint_config.address().end_point<boost::asio::ip::udp::endpoint>();;
+}
+
+void Config::remote_end_point(boost::asio::ip::udp::endpoint const& endpoint)
+{
+    _endpoint_config.address(ska::panda::IpAddress(endpoint));
+}
+
 } // namespace udp
 } // namespace source
 } // namespace greenburst

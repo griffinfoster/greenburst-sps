@@ -21,47 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/pipeline/GreenburstConfiguration.h"
+#ifndef GREENBURST_PIPELINE_FACTORY_H
+#define GREENBURST_PIPELINE_FACTORY_H
+
+#include "cheetah/pipeline/PipelinehandlerFactory.h"
 
 
 namespace greenburst {
 namespace pipeline {
+class GreenburstConfiguration;
 
+/**
+ * @brief
+ * @details
+ */
 
-GreenburstConfiguration::GreenburstConfiguration()
-    : BaseT("greenburst")
+class Factory : public ska::cheetah::pipeline::PipelineHandlerFactory
 {
-    add(_sources_config);
-    add(_cheetah_config);
-}
+        typedef ska::cheetah::pipeline::PipelineHandlerFactory BaseT;
 
-GreenburstConfiguration::~GreenburstConfiguration()
-{
-}
+    public:
+        Factory(GreenburstConfiguration& config);
+        ~Factory();
 
-void GreenburstConfiguration::add_options(OptionsDescriptionEasyInit&) 
-{
-}
-
-std::string const& GreenburstConfiguration::source_name() const
-{
-    return _cheetah_config.stream_name();
-}
-
-source::Config const& GreenburstConfiguration::source_config() const
-{
-    return _sources_config;
-}
-
-ska::cheetah::exporters::DataExportConfig const& GreenburstConfiguration::sink_config() const
-{
-    return _cheetah_config.data_config().data_export_config();
-}
-
-ska::cheetah::pipeline::CheetahConfig const& GreenburstConfiguration::cheetah_config() const
-{
-    return _cheetah_config;
-}
+    private:
+};
 
 } // namespace pipeline
 } // namespace greenburst
+
+#endif // GREENBURST_PIPELINE_FACTORY_H

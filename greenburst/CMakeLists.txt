@@ -14,6 +14,8 @@ include_directories(${PROJECT_BINARY_DIR})
 # subpackages to define ${lib_src} & ${test_utils_src} lists
 # in dependency order
 SUBPACKAGE(utils)
+SUBPACKAGE(source)
+SUBPACKAGE(sink)
 SUBPACKAGE(pipeline)
 
 # should come after all SUBPACKGE directives

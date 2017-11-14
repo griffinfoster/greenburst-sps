@@ -21,47 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/pipeline/GreenburstConfiguration.h"
+#include "greenburst/sink/Factory.h"
 
 
 namespace greenburst {
-namespace pipeline {
+namespace sink {
 
 
-GreenburstConfiguration::GreenburstConfiguration()
-    : BaseT("greenburst")
-{
-    add(_sources_config);
-    add(_cheetah_config);
-}
-
-GreenburstConfiguration::~GreenburstConfiguration()
+Factory::Factory()
 {
 }
 
-void GreenburstConfiguration::add_options(OptionsDescriptionEasyInit&) 
+Factory::~Factory()
 {
 }
 
-std::string const& GreenburstConfiguration::source_name() const
-{
-    return _cheetah_config.stream_name();
-}
-
-source::Config const& GreenburstConfiguration::source_config() const
-{
-    return _sources_config;
-}
-
-ska::cheetah::exporters::DataExportConfig const& GreenburstConfiguration::sink_config() const
-{
-    return _cheetah_config.data_config().data_export_config();
-}
-
-ska::cheetah::pipeline::CheetahConfig const& GreenburstConfiguration::cheetah_config() const
-{
-    return _cheetah_config;
-}
-
-} // namespace pipeline
+} // namespace sink
 } // namespace greenburst
