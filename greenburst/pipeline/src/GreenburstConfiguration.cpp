@@ -29,38 +29,23 @@ namespace pipeline {
 
 
 GreenburstConfiguration::GreenburstConfiguration()
-    : BaseT("greenburst")
+    : BaseT("greenburst", " pipeline launcher")
 {
     add(_sources_config);
-    add(_cheetah_config);
 }
 
 GreenburstConfiguration::~GreenburstConfiguration()
 {
 }
 
+
 void GreenburstConfiguration::add_options(OptionsDescriptionEasyInit&) 
 {
-}
-
-std::string const& GreenburstConfiguration::source_name() const
-{
-    return _cheetah_config.stream_name();
 }
 
 source::Config const& GreenburstConfiguration::source_config() const
 {
     return _sources_config;
-}
-
-ska::cheetah::exporters::DataExportConfig const& GreenburstConfiguration::sink_config() const
-{
-    return _cheetah_config.data_config().data_export_config();
-}
-
-ska::cheetah::pipeline::CheetahConfig const& GreenburstConfiguration::cheetah_config() const
-{
-    return _cheetah_config;
 }
 
 } // namespace pipeline

@@ -37,26 +37,21 @@ namespace pipeline {
  * @details
  */
 
-class GreenburstConfiguration : public ska::cheetah::pipeline::CheetahConfig //: public utils::ConfigModule::ConfigType
+class GreenburstConfiguration : public utils::ConfigModule::ConfigType
 {
-        //typedef utils::ConfigModule::ConfigType BaseT;
-        typedef ska::cheetah::pipeline::CheetahConfig BaseT;
+        typedef utils::ConfigModule::ConfigType BaseT;
 
     public:
         GreenburstConfiguration();
         ~GreenburstConfiguration();
 
-        std::string const& source_name() const;
         source::Config const& source_config() const;
-        ska::cheetah::exporters::DataExportConfig const& sink_config() const;
-        ska::cheetah::pipeline::CheetahConfig const& cheetah_config() const;
 
     protected:
         void add_options(OptionsDescriptionEasyInit& add_options) override;
 
     private:
         source::Config _sources_config;
-        ska::cheetah::pipeline::CheetahConfig _cheetah_config;
 };
 
 

@@ -21,27 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/pipeline/EmptyPipeline.h"
+#include "greenburst/sink/Config.h"
 
 
 namespace greenburst {
-namespace pipeline {
+namespace sink {
 
 
-EmptyPipeline::EmptyPipeline(GreenburstConfiguration const&, typename ProcessingPipeline::Exporter& exporter)
-    : ProcessingPipeline(exporter)
+Config::Config()
+    //: BaseT("sinks")
 {
 }
 
-
-EmptyPipeline::~EmptyPipeline()
+Config::~Config()
 {
 }
 
-void EmptyPipeline::operator()(TimeFrequencyType& data)
-{
-    out().send(ska::panda::ChannelId("raw"), data);
-}
-
-} // namespace pipeline
+} // namespace sink
 } // namespace greenburst

@@ -26,6 +26,7 @@
 
 #include "greenburst/source/Factory.h"
 #include "greenburst/sink/Factory.h"
+#include "greenburst/sink/Config.h"
 #include "greenburst/pipeline/Factory.h"
 #include "greenburst/pipeline/GreenburstConfiguration.h"
 
@@ -42,8 +43,9 @@ namespace pipeline {
 struct GreenburstLauncherTraits
 {
     typedef source::Factory SourceFactory;
-    typedef sink::Factory SinkFactory;
+    typedef sink::Factory Sink;
     typedef pipeline::Factory ComputeFactory;
+    typedef sink::Config SinkConfig;
     typedef GreenburstConfiguration Config;
 };
 

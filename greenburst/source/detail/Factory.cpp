@@ -25,18 +25,8 @@
 #include "greenburst/source/Config.h"
 #include "greenburst/source/udp/UdpStream.h"
 #include "greenburst/pipeline/GreenburstConfiguration.h"
-#include "cheetah/pipeline/Pipeline.h"
+#include "greenburst/pipeline/ProcessingPipeline.h"
 #include "cheetah/sigproc/SigProcFileStream.h"
-
-namespace {
-
-template<typename InputDataStream, typename PipelineHandlerType>
-std::shared_ptr<ska::cheetah::pipeline::Pipeline<InputDataStream>> create_pipeline(InputDataStream& stream, greenburst::pipeline::GreenburstConfiguration const& config, PipelineHandlerType& fn )
-{
-    return ska::cheetah::pipeline::create_pipeline(stream, config, fn);
-}
-
-} // namespace
 
 namespace greenburst {
 namespace source {
@@ -47,11 +37,12 @@ int Factory::exec(std::string const& stream_name, ComputeModule& runtime_handler
     int rv=1;
     if(stream_name == "sigproc") {
         ska::cheetah::sigproc::SigProcFileStream data_stream(_config.source_config().sigproc_config());
-        rv=create_pipeline<ska::cheetah::sigproc::SigProcFileStream>(data_stream, _config, runtime_handler)->exec();
+        rv=greenburst::pipeline::exec_pipeline(data_stream, runtime_handler);
+        //rv=create_pipeline<ska::cheetah::sigproc::SigProcFileStream>(data_stream, _config, runtime_handler)->exec();
     }
     else if(stream_name == "udp") {
         udp::UdpStream data_stream(_config.source_config().udp_config());
-        rv=create_pipeline<udp::UdpStream>(data_stream, _config, runtime_handler)->exec();
+        rv=greenburst::pipeline::exec_pipeline(data_stream, runtime_handler);
     }
     else {
         std::cerr << "unknown stream type '" << stream_name << "'" << std::endl;

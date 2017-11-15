@@ -24,20 +24,23 @@
 #ifndef GREENBURST_SINK_FACTORY_H
 #define GREENBURST_SINK_FACTORY_H
 
+#include "cheetah/pipeline/DataExport.h"
 
 namespace greenburst {
 namespace sink {
+class Config;
 
 /**
  * @brief
  * @details
  */
 
-class Factory
+class Factory : public ska::cheetah::pipeline::DataExport
 {
-    public:
-        Factory();
+        typedef ska::cheetah::pipeline::DataExport BaseT;
 
+    public:
+        Factory(Config const& config);
         ~Factory();
 
     private:

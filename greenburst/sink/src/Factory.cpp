@@ -22,13 +22,15 @@
  * SOFTWARE.
  */
 #include "greenburst/sink/Factory.h"
+#include "greenburst/sink/Config.h"
 
 
 namespace greenburst {
 namespace sink {
 
 
-Factory::Factory()
+Factory::Factory(Config const& config)
+    : BaseT(config)
 {
 }
 

@@ -27,7 +27,6 @@
 
 #include "greenburst/pipeline/ProcessingPipeline.h"
 #include "greenburst/pipeline/GreenburstConfiguration.h"
-#include "cheetah/sigproc/SigProcWriter.h"
 
 namespace greenburst {
 namespace pipeline {
@@ -40,14 +39,11 @@ namespace pipeline {
 class EmptyPipeline : public ProcessingPipeline
 {
     public:
-        EmptyPipeline(GreenburstConfiguration const&);
-        EmptyPipeline();
+        EmptyPipeline(GreenburstConfiguration const&, typename ProcessingPipeline::Exporter& exporter);
         ~EmptyPipeline();
 
         void operator()(TimeFrequencyType&) override;
 
-    private:
-        ska::cheetah::sigproc::SigProcWriter _writer;
 };
 
 

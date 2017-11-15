@@ -24,7 +24,8 @@
 #ifndef GREENBURST_PIPELINE_FACTORY_H
 #define GREENBURST_PIPELINE_FACTORY_H
 
-#include "cheetah/pipeline/PipelinehandlerFactory.h"
+#include "greenburst/pipeline/ProcessingPipeline.h"
+#include <panda/Factory.h>
 
 
 namespace greenburst {
@@ -36,15 +37,17 @@ class GreenburstConfiguration;
  * @details
  */
 
-class Factory : public ska::cheetah::pipeline::PipelineHandlerFactory
+class Factory : public ska::panda::Factory<ProcessingPipeline> 
 {
-        typedef ska::cheetah::pipeline::PipelineHandlerFactory BaseT;
+        typedef ska::panda::Factory<ProcessingPipeline> BaseT;
+        typedef typename ProcessingPipeline::Exporter Exporter;
 
     public:
-        Factory(GreenburstConfiguration& config);
+        Factory(GreenburstConfiguration& config, Exporter& exporter);
         ~Factory();
 
     private:
+        GreenburstConfiguration& _config;
 };
 
 } // namespace pipeline

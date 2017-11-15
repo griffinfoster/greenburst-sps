@@ -21,56 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GREENBURST_PIPELINE_PROCESSINGPIPELINE_H
-#define GREENBURST_PIPELINE_PROCESSINGPIPELINE_H
+#ifndef GREENBURST_SINK_CONFIG_H
+#define GREENBURST_SINK_CONFIG_H
 
-#include "greenburst/pipeline/GreenburstConfiguration.h"
-#include "greenburst/sink/Factory.h"
-#include "cheetah/data/TimeFrequency.h"
-#include "panda/Pipeline.h"
 
+#include <cheetah/exporters/DataExportConfig.h>
+#include <panda/ConfigModule.h>
 
 namespace greenburst {
-namespace pipeline {
-
-typedef ska::cheetah::data::TimeFrequency<ska::panda::Cpu, uint8_t> TimeFrequencyType;
+namespace sink {
 
 /**
  * @brief
  * @details
  */
 
-class ProcessingPipeline
+class Config : public ska::cheetah::exporters::DataExportConfig
 {
-    public:
-        typedef sink::Factory Exporter;
+        typedef ska::cheetah::exporters::DataExportConfig BaseT;
 
     public:
-        ProcessingPipeline(Exporter&);
-        virtual ~ProcessingPipeline() = 0;
-
-        virtual void operator()(TimeFrequencyType&) =0;
-
-        /**
-         * @brief return the data output streamer
-         * @details use the streamer to send your data to some external system(s) (e.g. file, network)
-         * @code 
-         *    out().send("channel_name", myData);
-         * @endcode
-         */
-        inline Exporter& out() { return _out; }
+        Config();
+        ~Config();
 
     private:
-        Exporter& _out;
 };
 
-template<typename InputStreamType>
-int exec_pipeline(InputStreamType& data_stream, ProcessingPipeline& runtime_handler)
-{
-    return ska::panda::Pipeline<InputStreamType>(data_stream, [&](TimeFrequencyType& d1){ runtime_handler(d1); } ).exec();
-}
 
-} // namespace pipeline
+} // namespace sink
 } // namespace greenburst
 
-#endif // GREENBURST_PIPELINE_PROCESSINGPIPELINE_H
+#endif // GREENBURST_SINK_CONFIG_H

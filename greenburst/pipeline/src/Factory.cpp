@@ -23,15 +23,17 @@
  */
 
 #include "greenburst/pipeline/Factory.h"
-#include "greenburst/pipeline/GreenburstConfiguration.h"
+#include "greenburst/pipeline/EmptyPipeline.h"
 
 
 namespace greenburst {
 namespace pipeline {
 
-Factory::Factory(GreenburstConfiguration& config)
-    : BaseT(config)
+Factory::Factory(GreenburstConfiguration& config, Exporter& exporter)
+    : BaseT("pipeline::Factory")
+    , _config(config)
 {
+    add_type("empty", [&, this]() { return new EmptyPipeline(_config, exporter); });
 }
 
 Factory::~Factory()

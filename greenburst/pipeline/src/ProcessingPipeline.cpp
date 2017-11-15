@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "pipeline/ProcessingPipeline.h"
+
+#include "greenburst/pipeline/ProcessingPipeline.h"
 
 
 namespace greenburst {
 namespace pipeline {
 
 
-ProcessingPipeline::ProcessingPipeline()
+ProcessingPipeline::ProcessingPipeline(Exporter& exporter)
+    : _out(exporter)
 {
 }
 
