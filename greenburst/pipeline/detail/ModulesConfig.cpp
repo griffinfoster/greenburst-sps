@@ -21,28 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "greenburst/pipeline/Factory.h"
-#include "greenburst/pipeline/EmptyPipeline.h"
-#include "greenburst/pipeline/SinglePulseSearch.h"
-#include "greenburst/pipeline/RfimPipeline.h"
+#include "greenburst/pipeline/ModulesConfig.h"
 
 
 namespace greenburst {
 namespace pipeline {
 
-Factory::Factory(GreenburstConfiguration& config, Exporter& exporter)
-    : BaseT("pipeline::Factory")
-    , _config(config)
+
+template<typename PoolManagerType>
+ModulesConfig<PoolManagerType>::ModulesConfig(PoolManagerType& pm)
+    : ska::panda::ConfigModule("modules")
+    , _pool_modules(pm, *this)
 {
-    add_type("empty", [&, this]() { return new EmptyPipeline(_config, exporter); });
-    add_type("rfim", [&, this]() { return new RfimPipeline(_config, exporter); });
-    add_type("sps", [&, this]() { return new SinglePulseSearch(_config, exporter); });
 }
 
-Factory::~Factory()
+template<typename PoolManagerType>
+ModulesConfig<PoolManagerType>::~ModulesConfig()
 {
 }
+
+template<typename PoolManagerType>
+void ModulesConfig<PoolManagerType>::add_options(OptionsDescriptionEasyInit&)
+{
+}
+
+template<typename PoolManagerType>
+template<typename T>
+ska::panda::PoolSelector<PoolManagerType, T> const& ModulesConfig<PoolManagerType>::config() const { return _pool_modules.template config<T>(); }
 
 } // namespace pipeline
 } // namespace greenburst

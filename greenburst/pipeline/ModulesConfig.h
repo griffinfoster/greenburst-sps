@@ -21,28 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#ifndef GREENBURST_PIPELINE_MODULESCONFIG_H
+#define GREENBURST_PIPELINE_MODULESCONFIG_H
 
-#include "greenburst/pipeline/Factory.h"
-#include "greenburst/pipeline/EmptyPipeline.h"
-#include "greenburst/pipeline/SinglePulseSearch.h"
-#include "greenburst/pipeline/RfimPipeline.h"
 
+#include "panda/ConfigModule.h"
+#include "panda/PoolModuleConfig.h"
+#include "cheetah/rfim/Config.h"
+#include "cheetah/sps/Config.h"
 
 namespace greenburst {
 namespace pipeline {
 
-Factory::Factory(GreenburstConfiguration& config, Exporter& exporter)
-    : BaseT("pipeline::Factory")
-    , _config(config)
-{
-    add_type("empty", [&, this]() { return new EmptyPipeline(_config, exporter); });
-    add_type("rfim", [&, this]() { return new RfimPipeline(_config, exporter); });
-    add_type("sps", [&, this]() { return new SinglePulseSearch(_config, exporter); });
-}
+/**
+ * @brief
+ *   Class to contain all module configurations
+ *
+ * @details
+ */
 
-Factory::~Factory()
+template<typename PoolManagerType>
+class ModulesConfig : public ska::panda::ConfigModule
 {
-}
+    public:
+        ModulesConfig(PoolManagerType&);
+        ~ModulesConfig();
+
+        /// get the configuration for the specified module
+        template<typename T>
+        ska::panda::PoolSelector<PoolManagerType, T> const& config() const;
+
+    protected:
+        void add_options(OptionsDescriptionEasyInit& add_options) override;
+
+    private:
+        ska::panda::PoolModuleConfig<PoolManagerType
+                                   , ska::cheetah::rfim::Config
+                                   , ska::cheetah::sps::Config
+                                    > _pool_modules;
+};
+
 
 } // namespace pipeline
 } // namespace greenburst
+#include "detail/ModulesConfig.cpp"
+
+#endif // GREENBURST_PIPELINE_MODULESCONFIG_H

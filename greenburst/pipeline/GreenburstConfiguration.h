@@ -25,11 +25,9 @@
 #define GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
 
 
+#include "greenburst/pipeline/ModulesConfig.h"
 #include "greenburst/utils/ConfigModule.h"
 #include "greenburst/source/Config.h"
-#include "cheetah/rfim/Config.h"
-#include "cheetah/sps/Config.h"
-#include "panda/PoolModuleConfig.h"
 
 namespace greenburst {
 namespace pipeline {
@@ -53,17 +51,14 @@ class GreenburstConfiguration : public utils::ConfigModule::ConfigType
 
         /// get the configuration for the specified module
         template<typename T>
-        ska::panda::PoolSelector<BaseT::PoolManagerType, T> const& module_config() const { return _pool_modules.config<T>(); }
+        ska::panda::PoolSelector<BaseT::PoolManagerType, T> const& module_config() const { return _modules.template config<T>(); }
 
     protected:
         void add_options(OptionsDescriptionEasyInit& add_options) override;
 
     private:
         source::Config _sources_config;
-        ska::panda::PoolModuleConfig<BaseT::PoolManagerType
-                                   , ska::cheetah::rfim::Config
-                                   , ska::cheetah::sps::Config
-                                    > _pool_modules;
+        ModulesConfig<BaseT::PoolManagerType>  _modules;
 };
 
 
