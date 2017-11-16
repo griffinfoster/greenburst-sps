@@ -27,6 +27,7 @@
 
 #include "panda/ConfigModule.h"
 #include "panda/Config.h"
+#include "cheetah/utils/System.h"
 #include "panda/arch/nvidia/Nvidia.h"
 #include "panda/Cpu.h"
 #include <string>

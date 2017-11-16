@@ -21,27 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "greenburst/pipeline/Factory.h"
-#include "greenburst/pipeline/EmptyPipeline.h"
-#include "greenburst/pipeline/SinglePulseSearch.h"
 #include "greenburst/pipeline/RfimPipeline.h"
 
 
 namespace greenburst {
 namespace pipeline {
 
-Factory::Factory(GreenburstConfiguration& config, Exporter& exporter)
-    : BaseT("pipeline::Factory")
-    , _config(config)
+
+RfimPipeline::RfimPipeline(GreenburstConfiguration const& config, typename ProcessingPipeline::Exporter& exporter)
+    : ProcessingPipeline(exporter)
+    , _rfim_handler(*this)
+    , _rfim(config.module_config<ska::cheetah::rfim::Config>() , _rfim_handler)
 {
-    add_type("empty", [&, this]() { return new EmptyPipeline(_config, exporter); });
-//    add_type("rfim", [&, this]() { return new RfimPipeline(_config, exporter); });
-    add_type("sps", [&, this]() { return new SinglePulseSearch(_config, exporter); });
 }
 
-Factory::~Factory()
+RfimPipeline::~RfimPipeline()
 {
+}
+
+void RfimPipeline::operator()(TimeFrequencyType& data)
+{
+    _rfim.run(data);
+}
+
+RfimPipeline::RfimHandler::RfimHandler(RfimPipeline& p)
+    : _pipeline(p)
+{
+}
+
+void RfimPipeline::RfimHandler::operator()(TimeFrequencyType data)
+{
+    // send data to the exporter
+    _pipeline.out().send(ska::panda::ChannelId("rfim"), data);
 }
 
 } // namespace pipeline

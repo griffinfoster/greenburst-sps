@@ -3,6 +3,8 @@ set(module_pipeline_lib_src_cpu
     src/Factory.cpp
     src/GreenburstConfiguration.cpp
     src/ProcessingPipeline.cpp
+    src/RfimPipeline.cpp
+    src/SinglePulseSearch.cpp
     PARENT_SCOPE
 )
 

@@ -30,6 +30,7 @@ namespace pipeline {
 
 GreenburstConfiguration::GreenburstConfiguration()
     : BaseT("greenburst", " pipeline launcher")
+    , _pool_modules(*this)
 {
     add(_sources_config);
 }

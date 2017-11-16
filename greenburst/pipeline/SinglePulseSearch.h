@@ -21,53 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
-#define GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
+#ifndef GREENBURST_PIPELINE_SINGLEPULSESEARCH_H
+#define GREENBURST_PIPELINE_SINGLEPULSESEARCH_H
 
 
-#include "greenburst/utils/ConfigModule.h"
-#include "greenburst/source/Config.h"
-#include "cheetah/rfim/Config.h"
-#include "cheetah/sps/Config.h"
-#include "panda/PoolModuleConfig.h"
+#include "greenburst/pipeline/ProcessingPipeline.h"
+#include "greenburst/pipeline/GreenburstConfiguration.h"
+
+// cheetah includes
+#include "cheetah/rfim/Rfim.h"
+#include "cheetah/sps/Sps.h"
 
 namespace greenburst {
 namespace pipeline {
 
 /**
  * @brief
- *    Configuration for the greenburst pipelines
- *
- * @details
+ *    Pipeline to perform single pulse dedispersion searches
  */
 
-class GreenburstConfiguration : public utils::ConfigModule::ConfigType
+class SinglePulseSearch : public ProcessingPipeline
 {
-        typedef utils::ConfigModule::ConfigType BaseT;
-
     public:
-        GreenburstConfiguration();
-        ~GreenburstConfiguration();
+        SinglePulseSearch(GreenburstConfiguration const&, typename ProcessingPipeline::Exporter& exporter);
+        ~SinglePulseSearch();
 
-        source::Config const& source_config() const;
-
-        /// get the configuration for the specified module
-        template<typename T>
-        ska::panda::PoolSelector<BaseT::PoolManagerType, T> const& module_config() const { return _pool_modules.config<T>(); }
-
-    protected:
-        void add_options(OptionsDescriptionEasyInit& add_options) override;
+        void operator()(TimeFrequencyType&) override;
 
     private:
-        source::Config _sources_config;
-        ska::panda::PoolModuleConfig<BaseT::PoolManagerType
-                                   , ska::cheetah::rfim::Config
-                                   , ska::cheetah::sps::Config
-                                    > _pool_modules;
+        typedef ska::cheetah::sps::Sps<ska::cheetah::sps::ConfigType<GreenburstConfiguration::PoolManagerType>> Sps;
+        Sps _sps;
+        ska::cheetah::rfim::Rfim<decltype(_sps)&, ska::cheetah::rfim::ConfigType<GreenburstConfiguration::PoolManagerType>>  _rfim;
 };
 
 
 } // namespace pipeline
 } // namespace greenburst
 
-#endif // GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
+#endif // GREENBURST_PIPELINE_SINGLEPULSESEARCH_H

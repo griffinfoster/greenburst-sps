@@ -21,53 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
-#define GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
+#ifndef GREENBURST_PIPELINE_RFIMPIPELINE_H
+#define GREENBURST_PIPELINE_RFIMPIPELINE_H
 
 
-#include "greenburst/utils/ConfigModule.h"
-#include "greenburst/source/Config.h"
-#include "cheetah/rfim/Config.h"
-#include "cheetah/sps/Config.h"
-#include "panda/PoolModuleConfig.h"
+#include "greenburst/pipeline/ProcessingPipeline.h"
+#include "greenburst/pipeline/GreenburstConfiguration.h"
+#include "cheetah/rfim/Rfim.h"
 
 namespace greenburst {
 namespace pipeline {
 
 /**
  * @brief
- *    Configuration for the greenburst pipelines
+ *    Pipeline for  Rfim excision
  *
  * @details
  */
 
-class GreenburstConfiguration : public utils::ConfigModule::ConfigType
+class RfimPipeline : public ProcessingPipeline
 {
-        typedef utils::ConfigModule::ConfigType BaseT;
-
     public:
-        GreenburstConfiguration();
-        ~GreenburstConfiguration();
+        RfimPipeline(GreenburstConfiguration const&, typename ProcessingPipeline::Exporter& exporter);
+        ~RfimPipeline();
 
-        source::Config const& source_config() const;
-
-        /// get the configuration for the specified module
-        template<typename T>
-        ska::panda::PoolSelector<BaseT::PoolManagerType, T> const& module_config() const { return _pool_modules.config<T>(); }
-
-    protected:
-        void add_options(OptionsDescriptionEasyInit& add_options) override;
+        void operator()(TimeFrequencyType&) override;
 
     private:
-        source::Config _sources_config;
-        ska::panda::PoolModuleConfig<BaseT::PoolManagerType
-                                   , ska::cheetah::rfim::Config
-                                   , ska::cheetah::sps::Config
-                                    > _pool_modules;
+        class RfimHandler {
+            public:
+                RfimHandler(RfimPipeline&);
+                void operator()(TimeFrequencyType);
+
+            private:
+                RfimPipeline& _pipeline;
+        };
+
+    private:
+        RfimHandler _rfim_handler;
+        ska::cheetah::rfim::Rfim<RfimHandler&, ska::cheetah::rfim::ConfigType<GreenburstConfiguration::PoolManagerType>>  _rfim;
 };
 
 
 } // namespace pipeline
 } // namespace greenburst
 
-#endif // GREENBURST_PIPELINE_GREENBURSTCONFIGURATION_H
+#endif // GREENBURST_PIPELINE_RFIMPIPELINE_H

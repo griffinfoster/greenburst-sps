@@ -21,27 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "greenburst/pipeline/Factory.h"
-#include "greenburst/pipeline/EmptyPipeline.h"
 #include "greenburst/pipeline/SinglePulseSearch.h"
-#include "greenburst/pipeline/RfimPipeline.h"
 
 
 namespace greenburst {
 namespace pipeline {
 
-Factory::Factory(GreenburstConfiguration& config, Exporter& exporter)
-    : BaseT("pipeline::Factory")
-    , _config(config)
+
+SinglePulseSearch::SinglePulseSearch(GreenburstConfiguration const& config, typename ProcessingPipeline::Exporter& exporter)
+    : ProcessingPipeline(exporter)
+    , _sps(config.module_config<ska::cheetah::sps::Config>(), 
+            [](std::shared_ptr<Sps::DmTrialType>) {},
+            [this](std::shared_ptr<Sps::SpType> data) {
+                // send to the exporter
+                out().send(ska::panda::ChannelId("sps"), *data);
+            }
+            )
+    , _rfim(config.module_config<ska::cheetah::rfim::Config>() , _sps)
 {
-    add_type("empty", [&, this]() { return new EmptyPipeline(_config, exporter); });
-//    add_type("rfim", [&, this]() { return new RfimPipeline(_config, exporter); });
-    add_type("sps", [&, this]() { return new SinglePulseSearch(_config, exporter); });
 }
 
-Factory::~Factory()
+SinglePulseSearch::~SinglePulseSearch()
 {
+}
+
+void SinglePulseSearch::operator()(TimeFrequencyType& data)
+{
+    _rfim.run(data);
 }
 
 } // namespace pipeline
