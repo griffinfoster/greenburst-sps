@@ -25,8 +25,6 @@
 #define GREENBURST_SOURCE_UDP_BEAMFORMERPACKET_H
 
 #include "Sample.h"
-#include <cstddef>
-
 
 namespace greenburst {
 namespace source {
@@ -46,33 +44,23 @@ class BeamFormerPacket
         ~BeamFormerPacket();
 
         /**
-         * @brief the total size in bytes of the packet (less the headers)
-         */
-        constexpr static std::size_t payload_size();
-
-        /**
-         * @brief the number of channel samples in each packet
-         */
-        constexpr static unsigned number_of_samples();
-
-        /**
          * @brief access the sample_number sample from the begininning of the packet (starting at 0)
          */
         Sample const& sample(unsigned sample_number) const;
 
+        /**
+         * @brief the total size in bytes of the packet (less the headers)
+         */
+        constexpr static unsigned payload  =  768;
+
+        /**
+         * @brief the number of channel samples in each packet
+         */
+        constexpr static unsigned number_of_samples  =  payload/sizeof(Sample);
+
     private:
-        Sample _samples[8];
+        Sample _samples[number_of_samples];
 };
-
-constexpr std::size_t BeamFormerPacket::payload_size()
-{
-    return 768;
-}
-
-constexpr unsigned BeamFormerPacket::number_of_samples()
-{
-    return payload_size()/sizeof(Sample);
-}
 
 } // namespace udp
 } // namespace source

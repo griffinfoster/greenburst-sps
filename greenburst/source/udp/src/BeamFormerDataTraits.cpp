@@ -37,38 +37,25 @@ BeamFormerDataTraits::~BeamFormerDataTraits()
 {
 }
 
-/*
-Sample const BeamFormerDataTraits::sample(unsigned sample_number) const
+uint64_t BeamFormerDataTraits::sequence_number(PacketInspector const& packet) const
 {
-    return packet.sample(sample_number);
-}
-*/
-
-uint64_t BeamFormerDataTraits::sequence_number(Packet const& packet) const
-{
-    // create header
-    //unsigned char[Packet::number_of_samples()] header_bytes;
-    unsigned char header_bytes[Packet::number_of_samples()];
-    for(unsigned i=0; i < Packet::number_of_samples(); ++i) {
-        header_bytes[i] = packet.sample(i).header();
-    }
-    uint64_t& header = *reinterpret_cast<uint64_t*>(&header_bytes);
-    return header >> 10;
+    return packet.sequence_number();
 }
 
 std::size_t BeamFormerDataTraits::chunk_size(DataType const& chunk)
 {
-    return chunk.number_of_samples() * chunk.number_of_channels();
+    return chunk.size();
 }
 
 
 std::size_t BeamFormerDataTraits::packet_size()
 {
-    return Packet::number_of_samples() * sizeof(uint8_t);
+    return Packet::number_of_samples * sizeof(uint8_t);
 }
 
-bool BeamFormerDataTraits::ignore(Packet const&) const
+bool BeamFormerDataTraits::align_packet(PacketInspector const& packet ) const
 {
+    if(packet.channel() == 00) return true; // must align to start of channels
     return false;
 }
 

@@ -21,41 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GREENBURST_SOURCE_UDP_SAMPLE_H
-#define GREENBURST_SOURCE_UDP_SAMPLE_H
+#include "greenburst/source/udp/BeamFormerPacketInspector.h"
 
-#include <cstdlib>
-#include <cstdint>
 
 namespace greenburst {
 namespace source {
 namespace udp {
 
-/**
- * @brief
- *    The representation of each channel sample in the udp packet
- * @details
- */
 
-class Sample
+BeamFormerPacketInspector::BeamFormerPacketInspector(Packet const& packet)
+    : _packet(packet)
 {
-    public:
-        Sample();
-        Sample(uint8_t xx, uint8_t yy);
-        ~Sample();
-        uint8_t header() const;
-        uint8_t xx() const;
-        uint8_t yy() const;
+    unsigned char* header_bytes = reinterpret_cast<unsigned char*>(&_header);
+    for(unsigned i=0; i < sizeof(uint64_t); ++i) {
+        header_bytes[i] = packet.sample(i).header();
+    }
+}
 
-    private:
-        uint8_t _h;
-        uint8_t _xx;
-        uint8_t _yy;
-};
-
+BeamFormerPacketInspector::~BeamFormerPacketInspector()
+{
+}
 
 } // namespace udp
 } // namespace source
 } // namespace greenburst
-
-#endif // GREENBURST_SOURCE_UDP_SAMPLE_H

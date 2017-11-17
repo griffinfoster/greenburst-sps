@@ -21,36 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef GREENBURST_SOURCE_UDP_SAMPLE_H
-#define GREENBURST_SOURCE_UDP_SAMPLE_H
+#ifndef GREENBURST_SOURCE_UDP_BEAMFORMERPACKETINSPECTOR_H
+#define GREENBURST_SOURCE_UDP_BEAMFORMERPACKETINSPECTOR_H
 
-#include <cstdlib>
-#include <cstdint>
+#include "greenburst/source/udp/BeamFormerPacket.h"
+
 
 namespace greenburst {
 namespace source {
 namespace udp {
 
+
 /**
  * @brief
- *    The representation of each channel sample in the udp packet
  * @details
  */
 
-class Sample
+class BeamFormerPacketInspector
 {
     public:
-        Sample();
-        Sample(uint8_t xx, uint8_t yy);
-        ~Sample();
-        uint8_t header() const;
-        uint8_t xx() const;
-        uint8_t yy() const;
+        typedef BeamFormerPacket Packet;
+
+    public:
+        BeamFormerPacketInspector(Packet const& packet);
+        ~BeamFormerPacketInspector();
+
+        inline uint64_t sequence_number() const {
+            return _header >> 10;
+        }
+
+        inline unsigned channel() const {
+            return _header & 0x3fff;
+        }
+
+        Packet const& packet() const { return _packet; }
+
+        inline bool ignore() { return false; }
 
     private:
-        uint8_t _h;
-        uint8_t _xx;
-        uint8_t _yy;
+        BeamFormerPacket const& _packet;
+        uint64_t _header;
 };
 
 
@@ -58,4 +68,4 @@ class Sample
 } // namespace source
 } // namespace greenburst
 
-#endif // GREENBURST_SOURCE_UDP_SAMPLE_H
+#endif // GREENBURST_SOURCE_UDP_BEAMFORMERPACKETINSPECTOR_H

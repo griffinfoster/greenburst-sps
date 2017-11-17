@@ -25,6 +25,7 @@
 #define GREENBURST_SOURCE_UDP_BEAMFORMERDATATRAITS_H
 
 #include "greenburst/source/udp/BeamFormerPacket.h"
+#include "greenburst/source/udp/BeamFormerPacketInspector.h"
 #include "cheetah/data/TimeFrequency.h"
 
 namespace greenburst {
@@ -42,6 +43,7 @@ class BeamFormerDataTraits
     public:
         typedef ska::cheetah::data::TimeFrequency<ska::panda::Cpu, uint8_t> DataType;
         typedef BeamFormerPacket Packet;
+        typedef BeamFormerPacketInspector PacketInspector;
 
     public:
         BeamFormerDataTraits();
@@ -51,7 +53,7 @@ class BeamFormerDataTraits
          * @brief returns the sequential number of the chunk that the packet belongs to
          * @details do not call this function before a call to packets_per_chunk has been made at least once
          */
-        uint64_t sequence_number(Packet const& packet) const;
+        uint64_t sequence_number(PacketInspector const& packet) const;
 
         /**
          * @brief the maximum value a packet sequence number will reach
@@ -69,16 +71,16 @@ class BeamFormerDataTraits
         static std::size_t chunk_size(DataType const& data);
 
         /**
-         * @brief ignore all packets other than the StokesI
+         * @brief align_packet : marks which packets have channel 0
          */
-        bool ignore(Packet const& packet) const;
+        bool align_packet(PacketInspector const& packet) const;
 
         /**
          * @brief function responsible for transfering data from the packet in to the
          *        data structure
          */
         template<typename ContextType>
-        void deserialise_packet(ContextType& context, Packet const&);
+        void deserialise_packet(ContextType& context, PacketInspector const&);
 
         /**
          * @brief perform operations to compenste for a missing packet

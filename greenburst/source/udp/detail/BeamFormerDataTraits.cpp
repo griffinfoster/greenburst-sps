@@ -32,20 +32,20 @@ namespace udp {
 // This function will keep requesting new chunks until the packet is consumed
 template<typename ContextType, typename IteratorType>
 static
-void do_deserialise_packet(ContextType& context, BeamFormerDataTraits::Packet const& packet, unsigned const sample_number, IteratorType&& it)
+void do_deserialise_packet(ContextType& context, BeamFormerDataTraits::PacketInspector const& packet, unsigned const sample_number, IteratorType&& it)
 {
     auto& chunk = context.chunk();
     auto sample_num = sample_number;
 
     PANDA_LOG_DEBUG << "do_deserialise_packet: sample_number=" << sample_number << " " << context;
-    while(sample_num < packet.number_of_samples()) {
+    while(sample_num < BeamFormerDataTraits::PacketInspector::Packet::number_of_samples) {
         auto end = chunk->end();
         if(it == end) {
             auto next = context.next();
             do_deserialise_packet<ContextType, IteratorType>(*next, packet, sample_num, std::move(next->chunk()->begin()));
             return;
         }
-        auto const& sample = packet.sample(sample_num);
+        auto const& sample = packet.packet().sample(sample_num);
         // Stokes I only
         *it = sample.xx();
         ++sample_num;
@@ -54,19 +54,12 @@ void do_deserialise_packet(ContextType& context, BeamFormerDataTraits::Packet co
 }
 
 template<typename ContextType>
-void BeamFormerDataTraits::deserialise_packet(ContextType& context, Packet const& packet)
+void BeamFormerDataTraits::deserialise_packet(ContextType& context, PacketInspector const& packet)
 {
-    // case I: packet > chunk
-    // [-- Packet 0 --][-- Packet 1 --][-- Packet 2 --]
-    // [Chunk 0][Chunk 1][Chunk 2]
-    // chunk_len * chunk_number = packet_num * packet_data
-    // chunk_len * chunk_number = packet_num * (chunk_len + delta) + offset
-    // offset = chunk_len * chunk_number - packet_num * (chunk_len + delta)
-    //        = chunk_len(chunk_number - packet_num) - packet_num * delta
-    //
-    unsigned offset = context.offset(); // * (context.chunk().number_of_channels() * context.chunk().number_of_samples())  - (context.sequence_number() * context.data().packet_size());
-    PANDA_LOG_DEBUG << " --- deserialise_packet: sequence_number=" << context.sequence_number(packet) << " " << context;
-    auto it=context.chunk()->begin() + offset; //(BeamFormerDataTraits::sequence_number(packet) - context.start()) + offset;
+    unsigned offset = context.offset();
+    PANDA_LOG_DEBUG << " --- deserialise_packet: sequence_number=" << packet.sequence_number() << " " << context;
+    assert(offset == packet.channel());
+    auto it=context.chunk()->begin() + offset;
     do_deserialise_packet(context, packet, 0U, std::move(it));
 }
 
