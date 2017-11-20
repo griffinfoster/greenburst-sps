@@ -58,7 +58,6 @@ void BeamFormerDataTraits::deserialise_packet(ContextType& context, PacketInspec
 {
     unsigned offset = context.offset();
     PANDA_LOG_DEBUG << " --- deserialise_packet: sequence_number=" << packet.sequence_number() << " " << context;
-    assert(offset == packet.channel());
     auto it=context.chunk()->begin() + offset;
     do_deserialise_packet(context, packet, 0U, std::move(it));
 }
