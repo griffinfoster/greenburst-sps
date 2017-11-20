@@ -39,6 +39,8 @@ namespace udp {
 
 class Sample
 {
+        friend class BeamFormerPacket;
+
     public:
         Sample();
         Sample(uint8_t xx, uint8_t yy);

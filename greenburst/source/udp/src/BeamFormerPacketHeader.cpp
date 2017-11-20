@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/source/udp/BeamFormerPacketInspector.h"
+#include "greenburst/source/udp/BeamFormerPacketHeader.h"
+#include "greenburst/source/udp/BeamFormerPacket.h"
 
 
 namespace greenburst {
@@ -29,14 +30,41 @@ namespace source {
 namespace udp {
 
 
-BeamFormerPacketInspector::BeamFormerPacketInspector(Packet const& packet)
-    : _packet(packet)
-    , _header(packet)
+BeamFormerPacketHeader::BeamFormerPacketHeader()
 {
 }
 
-BeamFormerPacketInspector::~BeamFormerPacketInspector()
+BeamFormerPacketHeader::BeamFormerPacketHeader(BeamFormerPacket const& packet)
 {
+    unsigned char* header_bytes = reinterpret_cast<unsigned char*>(&_header);
+    for(unsigned i=0; i < sizeof(uint64_t); ++i) {
+        header_bytes[i] = packet.sample(i).header();
+    }
+}
+
+BeamFormerPacketHeader::~BeamFormerPacketHeader()
+{
+}
+
+uint64_t const& BeamFormerPacketHeader::data() const
+{
+    return _header;
+}
+
+unsigned short BeamFormerPacketHeader::channel() const
+{
+    return _header & 0x3ff;
+}
+
+void BeamFormerPacketHeader::sequence_number(uint64_t number)
+{
+    _header = (_header & 0x3ff ) | (number << 10);
+}
+
+void BeamFormerPacketHeader::channel(unsigned short channel)
+{
+    //if(channel > 0x3fff) throw panda::Error("channel max exceeded (0x3fff)");
+    _header = (_header & ~0x3ff) | (channel & 0x3ff);
 }
 
 } // namespace udp

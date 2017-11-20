@@ -25,6 +25,7 @@
 #define GREENBURST_SOURCE_UDP_BEAMFORMERPACKETINSPECTOR_H
 
 #include "greenburst/source/udp/BeamFormerPacket.h"
+#include "greenburst/source/udp/BeamFormerPacketHeader.h"
 
 
 namespace greenburst {
@@ -47,11 +48,11 @@ class BeamFormerPacketInspector
         ~BeamFormerPacketInspector();
 
         inline uint64_t sequence_number() const {
-            return _header >> 10;
+            return _header.sequence_number();
         }
 
         inline unsigned channel() const {
-            return _header & 0x3fff;
+            return _header.channel();
         }
 
         Packet const& packet() const { return _packet; }
@@ -60,7 +61,7 @@ class BeamFormerPacketInspector
 
     private:
         BeamFormerPacket const& _packet;
-        uint64_t _header;
+        BeamFormerPacketHeader _header;
 };
 
 

@@ -21,24 +21,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/source/udp/BeamFormerPacketInspector.h"
+#ifndef GREENBURST_SOURCE_UDP_BEAMFORMERPACKETHEADER_H
+#define GREENBURST_SOURCE_UDP_BEAMFORMERPACKETHEADER_H
 
+#include <cstdint>
 
 namespace greenburst {
 namespace source {
 namespace udp {
+class BeamFormerPacket;
 
+/**
+ * @brief
+ *     Coding and decoding of a BeamFormerPacket meta information
+ * @details
+ */
 
-BeamFormerPacketInspector::BeamFormerPacketInspector(Packet const& packet)
-    : _packet(packet)
-    , _header(packet)
+class BeamFormerPacketHeader
 {
-}
+    public:
+        BeamFormerPacketHeader();
+        BeamFormerPacketHeader(BeamFormerPacket const&);
+        ~BeamFormerPacketHeader();
 
-BeamFormerPacketInspector::~BeamFormerPacketInspector()
-{
-}
+       /**
+        * @brief the packet sequence number
+        */
+        inline uint64_t sequence_number() const { return _header >> 10; }
+
+       /**
+        * @brief get the channel number of the first sample
+        */
+        unsigned short channel() const;
+
+       /**
+        * @brief set the packet sequence number
+        */
+        void sequence_number(uint64_t number);
+
+       /**
+        * @brief set the channel number of the first sample in the packet
+        */
+        void channel(unsigned short);
+
+        /**
+         * @brief return the encoded packet inforamtion
+         */
+        uint64_t const& data() const;
+
+    private:
+        uint64_t _header;
+};
+
 
 } // namespace udp
 } // namespace source
 } // namespace greenburst
+
+#endif // GREENBURST_SOURCE_UDP_BEAMFORMERPACKETHEADER_H

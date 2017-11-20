@@ -29,6 +29,7 @@
 namespace greenburst {
 namespace source {
 namespace udp {
+class BeamFormerPacketHeader;
 
 /**
  * @brief
@@ -57,6 +58,11 @@ class BeamFormerPacket
          * @brief the number of channel samples in each packet
          */
         constexpr static unsigned number_of_samples  =  payload/sizeof(Sample);
+
+        /**
+         * @brief set the beamformer packet header info
+         */
+        void set_header(BeamFormerPacketHeader const&);
 
     private:
         Sample _samples[number_of_samples];

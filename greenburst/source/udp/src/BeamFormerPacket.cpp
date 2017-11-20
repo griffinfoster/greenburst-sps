@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "greenburst/source/udp/BeamFormerPacket.h"
+#include "greenburst/source/udp/BeamFormerPacketHeader.h"
 
 
 namespace greenburst {
@@ -40,6 +41,14 @@ BeamFormerPacket::~BeamFormerPacket()
 Sample const& BeamFormerPacket::sample(unsigned sample_number) const
 {
     return _samples[sample_number];
+}
+
+void BeamFormerPacket::set_header(BeamFormerPacketHeader const& h)
+{
+    const unsigned char* header_bytes = reinterpret_cast<const unsigned char*>(&h.data());
+    for(unsigned i=0; i < sizeof(uint64_t); ++i) {
+        _samples[i]._h = header_bytes[i];
+    }
 }
 
 } // namespace udp

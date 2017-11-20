@@ -21,24 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/source/udp/BeamFormerPacketInspector.h"
+#include "../BeamFormerPacketTest.h"
+#include "greenburst/source/udp/BeamFormerPacket.h"
 
 
 namespace greenburst {
 namespace source {
 namespace udp {
+namespace test {
 
 
-BeamFormerPacketInspector::BeamFormerPacketInspector(Packet const& packet)
-    : _packet(packet)
-    , _header(packet)
+BeamFormerPacketTest::BeamFormerPacketTest()
+    : ::testing::Test()
 {
 }
 
-BeamFormerPacketInspector::~BeamFormerPacketInspector()
+BeamFormerPacketTest::~BeamFormerPacketTest()
 {
 }
 
+void BeamFormerPacketTest::SetUp()
+{
+}
+
+void BeamFormerPacketTest::TearDown()
+{
+}
+
+TEST_F(BeamFormerPacketTest, test_object_size)
+{
+    // the struct must be an exact binary representation of the packet
+    ASSERT_EQ(sizeof(BeamFormerPacket), BeamFormerPacket::number_of_samples * sizeof(Sample));
+}
+
+} // namespace test
 } // namespace udp
 } // namespace source
 } // namespace greenburst

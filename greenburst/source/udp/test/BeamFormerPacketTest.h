@@ -21,24 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "greenburst/source/udp/BeamFormerPacketInspector.h"
+#ifndef GREENBURST_SOURCE_UDP_TEST_BEAMFORMERPACKETTEST_H
+#define GREENBURST_SOURCE_UDP_TEST_BEAMFORMERPACKETTEST_H
 
+#include <gtest/gtest.h>
 
 namespace greenburst {
 namespace source {
 namespace udp {
+namespace test {
 
+/**
+ * @brief
+ * @details
+ */
 
-BeamFormerPacketInspector::BeamFormerPacketInspector(Packet const& packet)
-    : _packet(packet)
-    , _header(packet)
+class BeamFormerPacketTest : public ::testing::Test
 {
-}
+    protected:
+        void SetUp() override;
+        void TearDown() override;
 
-BeamFormerPacketInspector::~BeamFormerPacketInspector()
-{
-}
+    public:
+        BeamFormerPacketTest();
 
+        ~BeamFormerPacketTest();
+
+    private:
+};
+
+
+} // namespace test
 } // namespace udp
 } // namespace source
 } // namespace greenburst
+
+#endif // GREENBURST_SOURCE_UDP_TEST_BEAMFORMERPACKETTEST_H
