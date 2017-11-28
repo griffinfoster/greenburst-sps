@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "greenburst/source/udp/UdpStream.h"
-#include <panda/log.h>
+#include <panda/Log.h>
 
 
 namespace greenburst {
