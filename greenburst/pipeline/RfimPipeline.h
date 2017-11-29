@@ -59,7 +59,7 @@ class RfimPipeline : public ProcessingPipeline
 
     private:
         RfimHandler _rfim_handler;
-        ska::cheetah::rfim::Rfim<RfimHandler&, ska::cheetah::rfim::ConfigType<GreenburstConfiguration::PoolManagerType>>  _rfim;
+        ska::cheetah::rfim::Rfim<TimeFrequencyType, RfimHandler&, ska::cheetah::rfim::ConfigType<GreenburstConfiguration::PoolManagerType>>  _rfim;
 };
 
 

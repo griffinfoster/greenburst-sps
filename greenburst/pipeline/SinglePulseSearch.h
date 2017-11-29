@@ -51,7 +51,7 @@ class SinglePulseSearch : public ProcessingPipeline
     private:
         typedef ska::cheetah::sps::Sps<ska::cheetah::sps::ConfigType<GreenburstConfiguration::PoolManagerType>> Sps;
         Sps _sps;
-        ska::cheetah::rfim::Rfim<decltype(_sps)&, ska::cheetah::rfim::ConfigType<GreenburstConfiguration::PoolManagerType>>  _rfim;
+        ska::cheetah::rfim::Rfim<TimeFrequencyType, decltype(_sps)&, ska::cheetah::rfim::ConfigType<GreenburstConfiguration::PoolManagerType>>  _rfim;
 };
 
 
