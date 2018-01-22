@@ -1,5 +1,6 @@
 # thirdparty dependencies
 include(cmake/googletest.cmake)
+include(compiler_settings)
 
 include(cmake/boost.cmake)
 find_package(Panda REQUIRED)
@@ -19,6 +20,5 @@ set(DEPENDENCY_LIBRARIES
     ${HIREDIS_LIBRARIES}
 )
 
-include(compiler_settings)
 include(cmake/cuda.cmake)
 

@@ -48,6 +48,7 @@ SinglePulseSearch::~SinglePulseSearch()
 void SinglePulseSearch::operator()(TimeFrequencyType& data)
 {
     _rfim.run(data);
+    _sps(data);
 }
 
 } // namespace pipeline
