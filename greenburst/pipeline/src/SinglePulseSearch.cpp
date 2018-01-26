@@ -35,6 +35,10 @@ SinglePulseSearch::SinglePulseSearch(GreenburstConfiguration const& config, type
             [this](std::shared_ptr<Sps::SpType> data) {
                 // send to the exporter
                 out().send(ska::panda::ChannelId("sps"), *data);
+                for(auto& time_freq : data->tf_blocks())
+                {
+                    out().send(ska::panda::ChannelId("sps"), time_freq);
+                }
             }
             )
     , _rfim(config.module_config<ska::cheetah::rfim::Config>() , _sps)
