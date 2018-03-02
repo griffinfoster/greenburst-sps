@@ -35,7 +35,7 @@ Config::Config(source::Config const& parent)
     , _parent(parent)
     , _endpoint_config("listen")
 {
-    _endpoint_config.address(ska::panda::IpAddress(3434, "0.0.0.0"));
+    _endpoint_config.address(ska::panda::IpAddress(53, "0.0.0.0"));
     add(_endpoint_config);
 }
 
