@@ -1,0 +1,68 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<greenburst>
+  <pipeline>sps</pipeline>
+  <modules>
+    <rfim>
+      <rfim_sum_threshold>
+        <active>false</active>
+        <its_cutoff>6</its_cutoff>
+        <base_sensitivity>1</base_sensitivity>
+        <window>0</window>
+      </rfim_sum_threshold>
+    </rfim>
+    <sps>
+      <threshold>6</threshold>
+      <dedispersion_samples>327680</dedispersion_samples> <!--a sample is a spectrum, nchan * bits * dedispersion_samples be the size of the GPU memory-->
+      <astroaccelerate/>
+      <dedispersion>
+        <start>150</start>
+        <end>160</end>
+        <step>1</step>
+      </dedispersion>
+    </sps>
+  </modules>
+  <sink>
+    <channels>
+      <raw>
+        <active>true</active>
+        <sink>
+          <id>sigproc-raw</id>
+        </sink>
+      </raw>
+      <rfim>
+        <active>false</active>
+        <sink>
+          <id>sigproc-rfi</id>
+        </sink>
+      </rfim>
+      <sps>
+        <active>true</active>
+        <sink>
+          <id>spccl</id>
+        </sink>
+      </sps>
+    </channels>
+    <sigproc>
+      <id>sigproc-sps</id>
+      <output-dir>/ldata/cheetah_tests/sps/</output-dir>
+    </sigproc>
+    <sigproc>
+      <id>sigproc-raw</id>
+      <output-dir>/ldata/cheetah_tests/raw/</output-dir>
+    </sigproc>
+    <sigproc>
+      <id>sigproc-rfi</id>
+      <output-dir>/ldata/cheetah_tests/rfim/</output-dir>
+    </sigproc>
+    <spccl_files>
+      <id>spccl</id>
+      <dir>/ldata/cheetah_tests/spccl/</dir>
+    </spccl_files>
+  </sink>
+  <source>
+    <spectrums_per_chunk>131072</spectrums_per_chunk> <!--this needs to be tuned-->
+    <sigproc>
+    </sigproc>
+  </source>
+</greenburst>
